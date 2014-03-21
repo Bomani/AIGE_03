@@ -7,6 +7,7 @@ using System.IO;
 //directives to enforce that our parent Game Object required components
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Steering))]
+[RequireComponent(typeof(NavMeshAgent))]
 
  // Restructured by gmb9280 3/20/2014
  // Made the class abstract since we are only going to have
@@ -23,10 +24,146 @@ public abstract class Villager : MonoBehaviour
 	private Steering steering; // for low-level stuff
 	private GameManager gameManager; // Ref to the game manager instance
 
+    protected navAgent; // Reference to NavMeshAgent component
 
-    private GameObject target; // A g/o target that can be used to grab coordinates for NavMeshAgent
+
+    /**************************************************/
+    protected GameObject target; // A g/o target that can be used to grab coordinates for NavMeshAgent
+
+    // Float that the path following will check to 
+    // see if the target point has been reached
+    private const float TARGET_COLLISION_RADIUS = 2.0; 
+
+    // gmb9280: Method to get the transform of the target object. 
+    // Returns null if we don't have a target. 
+    protected Vector3 GetTargetPosition()
+    {
+        if (this.target == null) return null;
+        else
+        {
+            return target.transform.position;
+        }
+    }
+
+    // gmb9280: Getterfor the protected variable target. 
+    // Did not make setter because that should not happen from outside the class.
+    public GameObject Target
+    {
+        get { return this.target; }
+    }
+
+    // gmb9280: protected method to set the target. 
+    protected void SetTarget(GameObject target_)
+    {
+        this.target = target;
+    }
+
+    // A Vector3 target position that is used with path following
+    protected List<Vector3> targetPointList;
+
+    // Returns the next target in the target list
+    // ( Character will seek this first )
+    protected Vector3 NextTargetPoint()
+    {
+        // If there are no points to go to, return null
+        if (targetPointList.Count == 0)
+        {
+            return null;
+        }
+        
+        // If we still have a point to go to, 
+        else
+        {
+            // Return the last point in the list (LIFO)
+            return targetPointList[targetPointList.Count - 1];
+        }
+    }
+
+    // Adds a Vector3 to seek at the end of the list
+    protected void AddPointToBack(Vector3 additionalPoint_)
+    {
+        // Don't really know how to sanitize input here, 
+        // but maybe that's a TODO
+        this.targetPointList.Add(additionalPoint_);
+    }
+
+    // Adds a Vector3 to seek at the beginning of the list 
+    // ( Character will seek this last )
+    protected void AddPointToFront(Vector3 additionalPoint_)
+    {
+        // Don't really know how to sanitize input here, 
+        // but maybe that's a TODO
+        this.targetPointList.Insert(0, additionalPoint_);
+    }
+
+    // For path following only, NOT character following
+    // If point has been reached, look for next target point
+    protected void PathUpdate()
+    {
+        // Has next targetPoint been reached? 
+        if (this.WithinRange(NextTargetPoint, TARGET_COLLISION_RADIUS))
+        {
+            // Pop the last node off of targetPointList
+            this.targetPointList.RemoveAt(this.targetPointList.Count - 1);
+        }
+        else
+        {
+            // Make sure that the target is set with the NavMeshAgent
+
+        }
+    }
+
+    // Checks if THIS object is within range of another vector3 position
+    protected bool WithinRange(Vector3 vec_, float radius)
+    {
+        if (Math.Abs(this.transform.x - vec_.x) < radius &&
+            Math.Abs(this.transform.y - vec_y) < radius &&
+            Math.Abs(this.transform.x - vec_z) < radius)
+        { return true; }
+
+        else return false;
+    }
+
+
+
+
+    /**************************************************/
+
+    //Constructor for generic typeVillager
+    protected void Start()
+    {
+        // Retrieve component references from settings in Unity
+        this.characterController = gameObject.GetComponent<CharacterController>();
+
+        this.navAgent = gameObject.GetComponent<NavMeshAgent>();\
+
+        this.steering = gameObject.GetComponent<Steering>();
+
+        gameManager = GameManager.Instance; // Only one GameManager
+
+
+        // Reading in from text files.... apparently
+        FSMPath = "Assets/Resources/VillagerFSM.txt";
+        LoadFSM();
+        currSt = 0; // Initialize state in constructor???? TODO: Fix state machine
+
+        leaderFollowBool = false; // following mayor TODO: What the hell is this boolean and change it to a dynamic thing
+
+        nearWere = false; // if near werewolf for decision tree: TODO: make this a method so we don't need a member boolean
+
+        wereInCity = false; //if werewolves have infiltrated the city (This should be part of the game state maybe?) TODO: fix name of this stupid variable
+    }
+
+
+
+
+    // Possibly change these to game globals or private functions, because... eww
 	private bool nearWere;
 	private bool wereInCity;
+
+    // TODO: Make states an enum dynamically? Because I really want it to be an enum. So much easier. 
+    // Strings? Not cool man.
+
 
 	//File IO variables
 	int nStates;		// Number of states
@@ -44,6 +181,7 @@ public abstract class Villager : MonoBehaviour
 	//Follower reference, mostly for deletion
 	private Follow follower;
 
+    // Getter and setter for the private variable follower
 	public Follow Follower
     {
         get{return follower;} 
@@ -51,7 +189,9 @@ public abstract class Villager : MonoBehaviour
     }
 	
 	//Unique identification index assigned by the Game Manager 
-	private int index = -1; // auto assigned to an error variable
+	protected int index = -1; // auto assigned to an error variable
+
+    // Getter/setter for the private variable index
 	public int Index
     {
 		get { return index; }
@@ -59,7 +199,7 @@ public abstract class Villager : MonoBehaviour
 	}
 
 	// Returns a reference to the manager's GameManager component (script)
-	public void setGameManager (GameObject gManager)
+	protected void SetGameManager (GameObject gManager)
 	{
 		gameManager = gManager.GetComponent<GameManager> ();
 	}
@@ -68,83 +208,16 @@ public abstract class Villager : MonoBehaviour
     // NavMesh-y
 
 	//list of nearby flockers
-	private List<GameObject> nearVillagers = new List<GameObject> ();
-	private List<float> nearVillagersDistances = new List<float> ();
+	protected List<GameObject> nearVillagers = new List<GameObject> ();
+	protected List<float> nearVillagersDistances = new List<float> ();
 	
-	//Constructor for generic typeVillager
-	public void Start ()
-	{
-		// Retrieve component references from settings in Unity
-		this.characterController = gameObject.GetComponent<CharacterController> ();
-
-		steering = gameObject.GetComponent<Steering> ();
-
-		gameManager = GameManager.Instance; // Only one GameManager
-
-
-        // Reading in from text files.... apparently
-		FSMPath = "Assets/Resources/VillagerFSM.txt";
-		LoadFSM();
-		currSt = 0; // Initialize state in constructor???? TODO: Fix state machine
-
-		leaderFollowBool = false; // following mayor TODO: What the hell is this boolean and change it to a dynamic thing
-
-		nearWere = false; // if near werewolf for decision tree: TODO: make this a method so we don't need a member boolean
-
-		wereInCity = false; //if werewolves have infiltrated the city (This should be part of the game state maybe?) TODO: fix name of this stupid variable
-	}
 	
 
 
-	// Look up the next state from the current state and the input class
-	public int MakeTrans (int currState, int inClass)
-	{
-		return trans [currState, inClass];
-	}
-	
-	// Read the data file to define and fill the tables
-	void LoadFSM ()
-	{
 
-		StreamReader inStream = new StreamReader (FSMPath);
-		
-		// State table
-		nStates = int.Parse(inStream.ReadLine());
-		states = new string [nStates];
-		for (int i = 0; i < nStates; i++)
-			states[i] = inStream.ReadLine ();
-		
-		// Input table
-		nInputs = int.Parse(inStream.ReadLine());
-		inputs = new string [nInputs];
-		for (int i = 0; i < nInputs; i++)
-			inputs[i] = inStream.ReadLine ();
-		
-		// Transition table
-		trans = new int[nStates, nInputs];
-		for (int i = 0; i < nStates; i++)
-		{
-			string[] nums = inStream.ReadLine ().Split (' ');
-			for (int j = 0; j < nInputs; j++)
-				trans [i, j] = int.Parse(nums[j]);
-		}
-		//EchoFSM ();	// See it verything got into the tables correctly
-	}
 
-	public int NInputs	// Main needs to know this
-	{
-		get {
-			return nInputs;
-		}
-	}
 	
-	public string [] Inputs	// Ghost classes need to see this
-	{
-		get {
-			return inputs;
-		}
-	}
-		// Update is called once per frame
+	// Update is called once per frame
 	public void Update ()
 	{
 		CalcSteeringForce ();
@@ -282,6 +355,57 @@ public abstract class Villager : MonoBehaviour
 
             Destroy(savedVillager);
 
+        }
+    }
+
+    // Look up the next state from the current state and the input class
+    public int MakeTrans(int currState, int inClass)
+    {
+        return trans[currState, inClass];
+    }
+
+    // Read the data file to define and fill the tables
+    void LoadFSM()
+    {
+
+        StreamReader inStream = new StreamReader(FSMPath);
+
+        // State table
+        nStates = int.Parse(inStream.ReadLine());
+        states = new string[nStates];
+        for (int i = 0; i < nStates; i++)
+            states[i] = inStream.ReadLine();
+
+        // Input table
+        nInputs = int.Parse(inStream.ReadLine());
+        inputs = new string[nInputs];
+        for (int i = 0; i < nInputs; i++)
+            inputs[i] = inStream.ReadLine();
+
+        // Transition table
+        trans = new int[nStates, nInputs];
+        for (int i = 0; i < nStates; i++)
+        {
+            string[] nums = inStream.ReadLine().Split(' ');
+            for (int j = 0; j < nInputs; j++)
+                trans[i, j] = int.Parse(nums[j]);
+        }
+        //EchoFSM ();	// See it verything got into the tables correctly
+    }
+
+    public int NInputs	// Main needs to know this
+    {
+        get
+        {
+            return nInputs;
+        }
+    }
+
+    public string[] Inputs	// Ghost classes need to see this
+    {
+        get
+        {
+            return inputs;
         }
     }
 

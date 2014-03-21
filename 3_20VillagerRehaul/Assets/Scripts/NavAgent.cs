@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 
 public class NavAgent : MonoBehaviour {
 
@@ -13,8 +15,12 @@ public class NavAgent : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update (Vector3 target) {
 		// Basically just set this to a Vec3
-		//agent.SetDestination(targetPoint);
+        if(target == null) return; 
+        else
+        {
+		    agent.SetDestination(targetPoint);
+        }
 	}
 }
