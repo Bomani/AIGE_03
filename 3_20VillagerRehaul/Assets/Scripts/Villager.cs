@@ -3,6 +3,7 @@ using System.Collections;
 //including some .NET for dynamic arrays called List in C#
 using System.Collections.Generic;
 using System.IO;
+using System;
 
 //directives to enforce that our parent Game Object required components
 [RequireComponent(typeof(CharacterController))]
@@ -16,36 +17,36 @@ using System.IO;
  // This object will be focused on setting the Vector3 position 
  // that a Villager would seek. 
 
-public abstract class Villager : MonoBehaviour
+public class Villager : MonoBehaviour
 {
-    // NO MORE CHARACTER CONTROLLERS THANKS - We're going to make these NavMeshAgents
+    // We're going to make these NavMeshAgents
 	protected FSMmatcher stMatch;
 	protected int currSt;
 	private Steering steering; // for low-level stuff
 	private GameManager gameManager; // Ref to the game manager instance
 
-    protected navAgent; // Reference to NavMeshAgent component
-
+    protected NavMeshAgent navAgent; // Reference to NavMeshAgent component
+	protected CharacterController characterController;
 
     /**************************************************/
-    protected GameObject target; // A g/o target that can be used to grab coordinates for NavMeshAgent
+    protected GameObject target; // A gameobject target that can be used to grab coordinates for NavMeshAgent
 
     // Float that the path following will check to 
-    // see if the target point has been reached
-    private const float TARGET_COLLISION_RADIUS = 2.0; 
+    // see if the target point has been reached (Arbitrary for now)
+    private const float TARGET_COLLISION_RADIUS = 2.0f; 
 
     // gmb9280: Method to get the transform of the target object. 
     // Returns null if we don't have a target. 
     protected Vector3 GetTargetPosition()
     {
-        if (this.target == null) return null;
+        /*if (this.target == null) return null;
         else
-        {
+        {*/
             return target.transform.position;
-        }
+        //}
     }
 
-    // gmb9280: Getterfor the protected variable target. 
+    // gmb9280: Getter for the protected variable target. 
     // Did not make setter because that should not happen from outside the class.
     public GameObject Target
     {
@@ -57,18 +58,19 @@ public abstract class Villager : MonoBehaviour
     {
         this.target = target;
     }
-
-    // A Vector3 target position that is used with path following
+    
+    // A Vector3 target position list that is used with path following
     protected List<Vector3> targetPointList;
 
     // Returns the next target in the target list
     // ( Character will seek this first )
     protected Vector3 NextTargetPoint()
     {
-        // If there are no points to go to, return null
+        // If there are no points to go to, do nothing
         if (targetPointList.Count == 0)
         {
-            return null;
+            //return null; 
+			return this.transform.position;
         }
         
         // If we still have a point to go to, 
@@ -101,77 +103,84 @@ public abstract class Villager : MonoBehaviour
     protected void PathUpdate()
     {
         // Has next targetPoint been reached? 
-        if (this.WithinRange(NextTargetPoint, TARGET_COLLISION_RADIUS))
+        if (this.WithinRange(NextTargetPoint(), TARGET_COLLISION_RADIUS))
         {
             // Pop the last node off of targetPointList
             this.targetPointList.RemoveAt(this.targetPointList.Count - 1);
         }
         else
         {
-            // Make sure that the target is set with the NavMeshAgent
-
+            // Make sure that the target is set with the NavMeshAgent component
+            this.navAgent.SetDestination(NextTargetPoint());
         }
     }
 
     // Checks if THIS object is within range of another vector3 position
     protected bool WithinRange(Vector3 vec_, float radius)
     {
-        if (Math.Abs(this.transform.x - vec_.x) < radius &&
-            Math.Abs(this.transform.y - vec_y) < radius &&
-            Math.Abs(this.transform.x - vec_z) < radius)
+        if (Math.Abs(this.transform.position.x - vec_.x) < radius &&
+            Math.Abs(this.transform.position.y - vec_.y) < radius &&
+            Math.Abs(this.transform.position.x - vec_.z) < radius)
         { return true; }
 
         else return false;
     }
 
-
-
+	
+	// Initializes vars
+	protected void InitNav()
+	{
+		// Set target gameobject to self
+		this.target = this.gameObject;
+		
+		// Initialize list
+		this.targetPointList = new List<Vector3>();
+		
+		// Add a few random points on the list for now
+		// TODO: integrate list AND enum behavior
+		System.Random rand = new System.Random();
+		this.AddPointToBack(new Vector3(rand.Next(100), rand.Next (5), rand.Next (100)));
+		
+	}
 
     /**************************************************/
 
-    //Constructor for generic typeVillager
+    //Constructor for "generic" type Villager
     protected void Start()
     {
         // Retrieve component references from settings in Unity
         this.characterController = gameObject.GetComponent<CharacterController>();
 
-        this.navAgent = gameObject.GetComponent<NavMeshAgent>();\
+        this.navAgent = gameObject.GetComponent<NavMeshAgent>();
 
-        this.steering = gameObject.GetComponent<Steering>();
+        this.steering = gameObject.GetComponent<Steering>(); // for basic forces?
 
         gameManager = GameManager.Instance; // Only one GameManager
 
 
-        // Reading in from text files.... apparently
+        // Reading in from text files...
         FSMPath = "Assets/Resources/VillagerFSM.txt";
         LoadFSM();
         currSt = 0; // Initialize state in constructor???? TODO: Fix state machine
 
-        leaderFollowBool = false; // following mayor TODO: What the hell is this boolean and change it to a dynamic thing
+        //leaderFollowBool = false; // following mayor TODO: What the hell is this boolean and change it to a dynamic thing
 
-        nearWere = false; // if near werewolf for decision tree: TODO: make this a method so we don't need a member boolean
+        //nearWere = false; // if near werewolf for decision tree: TODO: make this a method so we don't need a member boolean
 
-        wereInCity = false; //if werewolves have infiltrated the city (This should be part of the game state maybe?) TODO: fix name of this stupid variable
+        //wereInCity = false; //if werewolves have infiltrated the city (This should be part of the game state maybe?) TODO: fix name of this variable
     }
 
 
 
 
-    // Possibly change these to game globals or private functions, because... eww
+    // TODO: Possibly change these to game globals or private functions. 
 	private bool nearWere;
 	private bool wereInCity;
 
-    // TODO: Make states an enum dynamically? Because I really want it to be an enum. So much easier. 
-    // Strings? Not cool man.
+    // TODO: Make states an enum dynamically? Because I really want it to be an enum.
 
 
-	//File IO variables
-	int nStates;		// Number of states
-	int nInputs;		// Number of input classes
-	string [] states;	// Array of state names
-	string [] inputs;	// Array of input class names
-	int [ , ] trans;	// Transition table derived from a transition diagram
-	private string FSMPath = null; // Data file name expected in bin folder
+	
 
 	//Wander variables for Steering. 
 	public int _wanAngle;
@@ -188,8 +197,8 @@ public abstract class Villager : MonoBehaviour
         set{follower = value;}
     }
 	
-	//Unique identification index assigned by the Game Manager 
-	protected int index = -1; // auto assigned to an error variable
+	// Unique identification index assigned by the Game Manager TODO: discover why we need this
+	protected int index = -1; // auto assigned to an error variable to show that it is unassigned
 
     // Getter/setter for the private variable index
 	public int Index
@@ -198,7 +207,7 @@ public abstract class Villager : MonoBehaviour
 		set { index = value; }
 	}
 
-	// Returns a reference to the manager's GameManager component (script)
+	// Sets a reference to the manager's GameManager component (script)
 	protected void SetGameManager (GameObject gManager)
 	{
 		gameManager = gManager.GetComponent<GameManager> ();
@@ -207,21 +216,19 @@ public abstract class Villager : MonoBehaviour
 	// We won't need movement variables because we are going to make this nice and 
     // NavMesh-y
 
-	//list of nearby flockers
+	//list of nearby villagers
 	protected List<GameObject> nearVillagers = new List<GameObject> ();
 	protected List<float> nearVillagersDistances = new List<float> ();
-	
-	
 
 
+    /******************* UPDATE ********************/
 
-
-	
 	// Update is called once per frame
 	public void Update ()
 	{
+        /* Removed to see how we fare without
 		CalcSteeringForce ();
-		ClampSteering ();
+		ClampSteering (); 
 		
 		moveDirection = transform.forward * steering.Speed;
 		// movedirection equals velocity
@@ -238,14 +245,16 @@ public abstract class Villager : MonoBehaviour
 		
 		// Apply gravity
 		moveDirection.y -= gravity;
-
+        */
 		// the CharacterController moves us subject to physical constraints
 
-		characterController.Move (moveDirection * Time.deltaTime);
+		//characterController.Move (moveDirection * Time.deltaTime);
+		
+		PathUpdate ();
 	}
 
 	
-
+    /**************** end UPDATE ********************/
 	
 	//Movement AI Behaviors -----------------------------------------------------------------------
 
@@ -336,7 +345,7 @@ public abstract class Villager : MonoBehaviour
 	
 	//---------------------------------------------------------------------------------------------
 
-    //Handles Collision with Cart for Scoring and Clean Up Purposes - and UI
+    //Handles Collision with Cart for Scoring and Clean Up and UI purposes
     public void OnCollisionEnter(Collision wCollision)
     {
         if (wCollision.gameObject.tag == "Cart")
@@ -357,6 +366,15 @@ public abstract class Villager : MonoBehaviour
 
         }
     }
+
+    /****************** File I/O ********************/
+    //File IO variables
+    int nStates;		// Number of states
+    int nInputs;		// Number of input classes
+    string[] states;	// Array of state names
+    string[] inputs;	// Array of input class names
+    int[,] trans;	// Transition table derived from a transition diagram
+    private string FSMPath = null; // Data file name expected in bin folder
 
     // Look up the next state from the current state and the input class
     public int MakeTrans(int currState, int inClass)
@@ -409,6 +427,7 @@ public abstract class Villager : MonoBehaviour
         }
     }
 
+    /******************** end File I/O *****************/
 	
 	
 }

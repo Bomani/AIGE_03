@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +20,8 @@ public class NavAgent : MonoBehaviour {
         if(target == null) return; 
         else
         {
-		    agent.SetDestination(targetPoint);
+		    agent.SetDestination(target);
         }
 	}
 }
+*/
