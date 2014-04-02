@@ -40,8 +40,8 @@
 -define:ENABLE_PROFILER
 -define:UNITY_EDITOR
 -define:UNITY_EDITOR_WIN
--r:"F:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll"
--r:"F:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll"
+-r:"C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll"
+-r:"C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll"
 -i:UnityEditor
 "Assets/Standard Assets/Character Controllers/Sources/Scripts/CharacterMotor.js"
 "Assets/Standard Assets/Character Controllers/Sources/Scripts/FPSInputController.js"

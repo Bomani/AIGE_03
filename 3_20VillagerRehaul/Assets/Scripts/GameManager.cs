@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
 	
 
 	// "Constants"
-	public int numberOfvillagers;
+	public int numberOfvillagers = 10;
 	public int numberOfWerewolves;
 	public Object villagerPrefab;
 	public Object werewolfPrefab;
@@ -100,15 +100,18 @@ public class GameManager : MonoBehaviour
 		obstacles = GameObject.FindGameObjectsWithTag ("Obstacle");
 		
 		mayor = GameObject.FindGameObjectWithTag ("Mayor");
-		
-		for (int i = 0; i < numberOfvillagers; i++) {
+
+		numberOfvillagers = 10;
+
+		for (int i = 0; i < numberOfvillagers; i++) 
+		{
 			//Instantiate a flocker prefab, catch the reference, cast it to a GameObject
 			//and add it to our list all in one line.
 			villagers.Add ((GameObject)Instantiate (villagerPrefab, 
 				new Vector3 (600 + 5 * i, 5, 400), Quaternion.identity));
 			//grab a component reference
 			villager = villagers [i].GetComponent<Villager> ();
-			// HOW ABOUT NO //villagers[i].GetComponent<MeshRenderer>().material.SetColor("_Color", Color.green);
+			//villagers[i].GetComponent<MeshRenderer>().material.SetColor("_Color", Color.green);
 			//set values in the Vehicle script
 			villager.Index = i;
 			
@@ -120,6 +123,8 @@ public class GameManager : MonoBehaviour
 			follower.ToFollow = villagers[i];
 			//VillageFollowers[i].GetComponent<MeshRenderer>().material.SetColor("_Color", Color.green);
 			villager.Follower = follower;
+
+			Debug.Log ("Should have added another villager to the list.");
 			
 		}
 		

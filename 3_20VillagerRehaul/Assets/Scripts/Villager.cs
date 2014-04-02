@@ -87,6 +87,7 @@ public class Villager : MonoBehaviour
         // Don't really know how to sanitize input here, 
         // but maybe that's a TODO
         this.targetPointList.Add(additionalPoint_);
+		Debug.Log ("Added to point list. Count: " + targetPointList.Count );
     }
 
     // Adds a Vector3 to seek at the beginning of the list 
@@ -140,7 +141,6 @@ public class Villager : MonoBehaviour
 		// TODO: integrate list AND enum behavior
 		System.Random rand = new System.Random();
 		this.AddPointToBack(new Vector3(rand.Next(100), rand.Next (5), rand.Next (100)));
-		
 	}
 
     /**************************************************/
@@ -148,6 +148,7 @@ public class Villager : MonoBehaviour
     //Constructor for "generic" type Villager
     protected void Start()
     {
+		Debug.Log ("New villager created.");
         // Retrieve component references from settings in Unity
         this.characterController = gameObject.GetComponent<CharacterController>();
 
@@ -156,7 +157,7 @@ public class Villager : MonoBehaviour
         this.steering = gameObject.GetComponent<Steering>(); // for basic forces?
 
         gameManager = GameManager.Instance; // Only one GameManager
-
+		InitNav();
 
         // Reading in from text files...
         FSMPath = "Assets/Resources/VillagerFSM.txt";

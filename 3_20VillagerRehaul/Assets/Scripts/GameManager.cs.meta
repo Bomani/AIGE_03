@@ -2,7 +2,12 @@ fileFormatVersion: 2
 guid: b07713b6dddff8f4297236e34633cbe9
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - villagerPrefab: {fileID: 100000, guid: 2a7367400a4091943a81aa7de1f12d4e, type: 2}
+  - werewolfPrefab: {fileID: 100000, guid: 7ce39c5707cc0fe43a1c5a72ff51a442, type: 2}
+  - obstaclePrefab: {instanceID: 0}
+  - followerPrefab: {instanceID: 0}
+  - centroidContainer: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

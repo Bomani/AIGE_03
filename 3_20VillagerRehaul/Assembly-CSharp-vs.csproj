@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{8B9747F5-227B-8C88-9184-6B80F57BEE11}</ProjectGuid>
+	<ProjectGuid>{6493EEA5-5724-BB6C-F8F8-77284FA0484B}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -46,16 +46,14 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Child.cs" />
      <Compile Include="Assets\Scripts\Dead.cs" />
      <Compile Include="Assets\Scripts\Dimensions.cs" />
      <Compile Include="Assets\Scripts\Explaination.cs" />
      <Compile Include="Assets\Scripts\FSMmatcher.cs" />
      <Compile Include="Assets\Scripts\Follow.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
-     <Compile Include="Assets\Scripts\Grid.cs" />
      <Compile Include="Assets\Scripts\Mayor.cs" />
-     <Compile Include="Assets\Scripts\NavAgent.cs" />
-     <Compile Include="Assets\Scripts\Quadrant.cs" />
      <Compile Include="Assets\Scripts\Saved.cs" />
      <Compile Include="Assets\Scripts\SmoothFollowCS.cs" />
      <Compile Include="Assets\Scripts\Steering.cs" />
@@ -71,7 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass-vs.csproj">
-      <Project>{7D514EED-1797-20E3-0D45-090E4EBFF3A7}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
+      <Project>{EDD13D70-E1F6-26A3-6775-A0E6B4D3EF4C}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
