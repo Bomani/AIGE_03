@@ -20,7 +20,6 @@ public class Villager : MonoBehaviour
 	private Steering steering;
 	private GameManager gameManager;
 
-
 	
 	// List of nodes for pathfinding
 	// Note: when I used this I just kept a singleton
@@ -123,7 +122,7 @@ public class Villager : MonoBehaviour
 			Destroy(follower);
 			Destroy(savedVillager);
 			Destroy(this);
-			gameManager.createNewVillager();
+			gameManager.currVillagers -= 1;
 			gameManager.Saved.SavedVillagers = gameManager.Saved.SavedVillagers + 1;
 			
 			Destroy(savedVillager);	
@@ -250,9 +249,6 @@ public class Villager : MonoBehaviour
 					break;
 				//FollowMayor
 				case 1:
-				//Debug.Log("Mayor");
-
-					
 						for(int i = 0; i < gameManager.Werewolves.Count; i++) {
 							
 							if(Vector3.Distance(this.transform.position, gameManager.Werewolves[i].transform.position) < 5) {
@@ -264,7 +260,7 @@ public class Villager : MonoBehaviour
 						
 						if(nearWere == false) {
 							
-							if(Vector3.Distance(this.transform.position, gameManager.Mayor.transform.position) > 20 && leaderFollowBool == true) {
+							if(Vector3.Distance(this.transform.position, gameManager.Mayor.transform.position) > 30 && leaderFollowBool == true) {
 								
 								currSt = MakeTrans(currSt,4);
 								leaderFollowBool = false;
@@ -278,7 +274,7 @@ public class Villager : MonoBehaviour
 									steeringForce += gameManager.cohesionWt * Cohesion();
 									leaderFollowBool = true;
 								}else {
-									steeringForce += 15 * leaderFollow();
+									steeringForce += 45 * leaderFollow();
 									steeringForce += gameManager.separationWt * Separation();
 									steeringForce += gameManager.cohesionWt * Cohesion();
 								}
@@ -289,7 +285,6 @@ public class Villager : MonoBehaviour
 			break;
 				//FleeWerewolf
 				case 2:
-				//Debug.Log("Werewolf");
 					nearWere = false;	
 				
 					if(wereInCity) {

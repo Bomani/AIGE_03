@@ -1,9 +1,6 @@
-Hello AIers!
+Decision States
 
-This is the repository for AI for Game Environments
-Here you will be able to access the various iterations of the 
-class project. Please make sure to fork the repository to your
-own branch before making changes. If you don't know how to fork
-the repository, please make an account on GitHub, which you should 
-have if you see this, and use the "Fork a Repository" tutorial on
-the site. 
+I implemented both decision trees and state machines within the Villager class. 
+The state machine was built out of the given FSM code, and the decision trees were 
+implemented within the states themselves, held in the switch statement in the CalcForces()
+method. 

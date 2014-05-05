@@ -21,6 +21,13 @@ public class GameManager : MonoBehaviour
 	// "Constants"
 	public int numberOfvillagers;
 	public int numberOfWerewolves;
+	private int currentNumberOfVillagers;
+
+	public int currVillagers {
+		get {return currentNumberOfVillagers;}
+		set {currentNumberOfVillagers = value;}
+	}
+
 	public Object villagerPrefab;
 	public Object werewolfPrefab;
 	public Object obstaclePrefab;
@@ -96,7 +103,9 @@ public class GameManager : MonoBehaviour
 		Villager villager;
 		Werewolf werewolf;
 		Follow follower;
-		
+
+		currentNumberOfVillagers = 6;
+
 		obstacles = GameObject.FindGameObjectsWithTag ("Obstacle");
 		
 		mayor = GameObject.FindGameObjectWithTag ("Mayor");
@@ -175,9 +184,17 @@ public class GameManager : MonoBehaviour
 	
 	public void Update( )
 	{
-		//calcCentroid( );//find average position of each flocker 
-		calcFlockDirection( );//find average "forward" for each flocker
-		//calcDistances( );
+		if(currentNumberOfVillagers == 0) {
+
+			while(currentNumberOfVillagers != 6) {
+
+				createNewVillager();
+
+				currentNumberOfVillagers++;
+			}
+
+
+		}
 	}
 	
 	private void calcFlockDirection ()

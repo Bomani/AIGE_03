@@ -59,7 +59,7 @@ public class Werewolf : MonoBehaviour {
 			Destroy(death.Follower.gameObject);
 			Destroy(death.Follower);
 			Destroy(deadVillager);
-			gameManager.createNewVillager();
+			gameManager.currVillagers -= 1;
 			gameManager.Dead.DeadVillagers = gameManager.Dead.DeadVillagers + 1;
 			
 			findTarget(); // find a new target
