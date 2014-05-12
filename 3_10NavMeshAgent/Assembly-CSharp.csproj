@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\Markov.cs" />
      <Compile Include="Assets\Scripts\Mayor.cs" />
      <Compile Include="Assets\Scripts\NavAgent.cs" />
+     <Compile Include="Assets\Scripts\PlayerLabel.cs" />
      <Compile Include="Assets\Scripts\Population.cs" />
      <Compile Include="Assets\Scripts\Quadrant.cs" />
      <Compile Include="Assets\Scripts\Saved.cs" />
