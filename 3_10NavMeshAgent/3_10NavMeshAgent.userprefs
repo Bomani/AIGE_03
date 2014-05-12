@@ -1,6 +1,13 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\ThreshPop.cs">
+    <Files>
+      <File FileName="Assets\Scripts\Population.cs" Line="23" Column="9" />
+      <File FileName="Assets\Scripts\Individual.cs" Line="29" Column="19" />
+      <File FileName="Assets\Scripts\Util.cs" Line="40" Column="47" />
+      <File FileName="Assets\Scripts\ThreshPop.cs" Line="97" Column="32" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

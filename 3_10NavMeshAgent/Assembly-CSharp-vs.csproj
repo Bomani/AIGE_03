@@ -54,13 +54,17 @@
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\Graph.cs" />
      <Compile Include="Assets\Scripts\Grid.cs" />
+     <Compile Include="Assets\Scripts\Individual.cs" />
      <Compile Include="Assets\Scripts\Markov.cs" />
      <Compile Include="Assets\Scripts\Mayor.cs" />
      <Compile Include="Assets\Scripts\NavAgent.cs" />
+     <Compile Include="Assets\Scripts\Population.cs" />
      <Compile Include="Assets\Scripts\Quadrant.cs" />
      <Compile Include="Assets\Scripts\Saved.cs" />
      <Compile Include="Assets\Scripts\SmoothFollowCS.cs" />
      <Compile Include="Assets\Scripts\Steering.cs" />
+     <Compile Include="Assets\Scripts\ThreshPop.cs" />
+     <Compile Include="Assets\Scripts\Util.cs" />
      <Compile Include="Assets\Scripts\Vehicle.cs" />
      <Compile Include="Assets\Scripts\Villager.cs" />
      <Compile Include="Assets\Scripts\Werewolf.cs" />
