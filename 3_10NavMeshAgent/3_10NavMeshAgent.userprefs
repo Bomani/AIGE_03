@@ -1,8 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerLabel.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\PlayerLabel.cs" Line="11" Column="8" />
+      <File FileName="Assets\Scripts\Markov.cs" Line="52" Column="1" />
+      <File FileName="Assets\Scripts\PlayerLabel.cs" Line="23" Column="32" />
+      <File FileName="Assets\Scripts\GameManager.cs" Line="189" Column="58" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
