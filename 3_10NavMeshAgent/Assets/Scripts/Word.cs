@@ -17,8 +17,18 @@ public class Word : MonoBehaviour {
 		wordSt = st;
 		offset = off;
 		count = 1;
-	}
 	
+	}
+
+	public Word init(string st, int off) {
+		wordSt = st;
+		offset = off;
+		count = 1;
+
+		return this;
+		
+		
+	}
 	// Update is called once per frame
 	void Update () {
 	

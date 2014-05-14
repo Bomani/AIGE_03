@@ -23,6 +23,11 @@ public class Graph : MonoBehaviour {
 	
 	}
 
+	public void init() {
+		numVertices = 0;
+		vertices = new Hashtable();
+	}
+
 	public int NumVertices
 	{
 		get { return numVertices; }
@@ -30,6 +35,7 @@ public class Graph : MonoBehaviour {
 	
 	public void CreateMatrix ()		// Don't call until numVertices is set
 	{
+
 		matrix = new int[numVertices, numVertices];		// Declare 2D array
 		wordString = new string[numVertices];
 		wordString[0] = "BEGIN-END";
@@ -49,7 +55,7 @@ public class Graph : MonoBehaviour {
 		else
 		{									// New word, add to vertices
 			numVertices++;					// and count it as a new word
-			Word w = new Word(word, numVertices - 1);
+			Word w = GetComponent<Word>().init(word, numVertices - 1);
 			vertices.Add(word, w);
 		}
 	}
@@ -103,14 +109,19 @@ public class Graph : MonoBehaviour {
 	
 	public string GenNextWord(string prevWord)		// Generate next word of gibberish
 	{
+		//Debug.Log (prevWord);
 		Word prev = (Word) vertices[prevWord];
+
 		int nextOffset = findNextWord(prev.Offset, prev.Count);
 		return wordString[nextOffset];
 	}
 	
 	int findNextWord(int prevOff, int prevCount)
 	{
+		Debug.Log (prevCount);
+
 		int randCt = rand.Next(1, prevCount);
+	
 		int tot = 0;
 		for (int i = 0; i < numVertices; i++)	// Walk across the matrix row
 		{

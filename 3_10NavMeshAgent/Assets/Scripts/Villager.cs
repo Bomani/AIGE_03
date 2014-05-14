@@ -106,6 +106,11 @@ public class Villager : MonoBehaviour
 		wereInCity = false; //if were wolves have infiltrated the city
 
 		pathNodes = new List<GameObject> (); 
+
+		Markov markov = GetComponent<Markov>();
+		markov.init();
+		markov.CreateGraph();
+		GetComponent<PlayerLabel>().newSentence();
 	}
 	
 	//Handles Collision with Cart for Scoring and Clean Up Purposes
@@ -463,8 +468,15 @@ public class Villager : MonoBehaviour
 	private Vector3 leaderFollow()
 	{
 		steeringForce = Vector3.zero;
-	
-		
+
+		int place = 1;
+
+		for(int i = 0;  i < gameManager.Followers.Count; i++) {
+			if (gameManager.Followers[i] == this) {
+				place = i;
+			}
+		}
+
 		if(gameManager.Followers[0] == this || gameManager.Followers[0] == null)
 		{
 
@@ -473,7 +485,7 @@ public class Villager : MonoBehaviour
 		else
 		{
 			
-			steeringForce += steering.Arrival(gameManager.Followers[gameManager.Followers.Count-1].transform.position);
+			steeringForce += steering.Arrival(gameManager.Followers[place-1].transform.position);
 		}
 		
 		return steeringForce;

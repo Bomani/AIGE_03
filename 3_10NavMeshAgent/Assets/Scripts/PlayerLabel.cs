@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Text;
 
 /// <summary>
 /// This script is attached to the player and it writes the 
@@ -11,7 +13,8 @@ public class PlayerLabel : MonoBehaviour {
 	public Camera myCamera;
 	private Transform myTransform;	
 	private Transform triggerTransform;
-	
+	private Markov markov;
+	private System.Random rand;
 	
 	
 	//These are used in determining whether the label should be drawn
@@ -29,8 +32,9 @@ public class PlayerLabel : MonoBehaviour {
 	private string playerName;  
 	public string PlayerName { 
 		get { return playerName;}
-		set {playerName = value; }}
-	
+		set {playerName = value; }
+	}
+
 	private GUIStyle myStyle = new GUIStyle();
 	private GUIStyle theirStyle = new GUIStyle();
 	
@@ -47,7 +51,8 @@ public class PlayerLabel : MonoBehaviour {
 		playerName = objectName;
 		myTransform = transform;
 		myCamera = Camera.main;
-		
+		rand = new System.Random();
+
 		if(networkView.isMine)
 		{		
 			myStyle.normal.textColor = Color.black;	
@@ -64,6 +69,8 @@ public class PlayerLabel : MonoBehaviour {
 			theirStyle.fontStyle = FontStyle.Bold;
 			theirStyle.clipping = TextClipping.Overflow;	
 		}
+
+		markov = GetComponent<Markov>();
 	}
 	
 	
@@ -71,7 +78,6 @@ public class PlayerLabel : MonoBehaviour {
 	void Update () 
 	{	
 		//Capture whether the player is in front or behind the camera.
-		Debug.Log (myCamera);
 		cameraRelativePosition = myCamera.transform.InverseTransformPoint(myTransform.position);
 	}
 	
@@ -96,11 +102,46 @@ public class PlayerLabel : MonoBehaviour {
 			if(networkView.isMine) style = myStyle;
 			else style = theirStyle;
 			
-			
 			GUI.Label(new Rect(screenPosition.x - labelWidth / 2,
 			                   Screen.height - screenPosition.y - labelTop,
 			                   labelWidth, labelHeight), playerName, style);
+
+
 			
 		}
 	}
+
+	public void newSentence() {
+
+		playerName = sentStringArr(markov.GenGibSent(rand.Next(60)));
+		Invoke("newSentence", 5 + (playerName.Length/20));
+	}
+
+	string sentStringArr (string[] sentWords) {
+
+		string returned = "";
+
+		string firstChar = sentWords[0].Substring(0, 1).ToUpper();	// Cap first word
+		string capitalized = firstChar + sentWords[0].Substring(1, sentWords[0].Length-1);
+		sentWords[0] = capitalized;
+
+		returned = returned + sentWords[0];
+
+		for (int i = 1; i < sentWords.Length; i++)	// Print rest of words
+		{
+			returned = returned + " ";
+			if (sentWords[i] == null)
+			{
+				returned = returned + ".";
+				return returned;
+			}
+			else
+				returned = returned + sentWords[i];
+		}
+
+		returned = returned + ".";					// Put period at the end
+		return returned;
+	}
+
 }
+

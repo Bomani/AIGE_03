@@ -6,18 +6,23 @@ using System.IO;
 
 public class Markov : MonoBehaviour {
 
-
+	public string filePath;
 	Graph biGrams;		// Graph attribute holds the Markov Chain
-
+	
 	// Use this for initialization
 	void Start () {
 
-		biGrams = new Graph();	// Declare the Graph but don't initialize it yet
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	public void init () {
+		biGrams = GetComponent<Graph>();	// Declare the Graph but don't initialize it yet
+		biGrams.init();
 	}
 
 	/* CreateGraph method
@@ -30,7 +35,7 @@ public class Markov : MonoBehaviour {
 		 * i.e., the first word in a sentence follows BEGIN-END, and the last word in a
 		 * sentence is followed by BEGIN-END.
 		 */
-	public void CreateGraph(string filePath)
+	public void CreateGraph()
 	{
 		StreamReader input = null;
 		try
@@ -87,7 +92,7 @@ public class Markov : MonoBehaviour {
 				input.Close();
 			}
 		}
-		
+	
 		biGrams.CreateMatrix();  // Now know how many vertices, so create transition matrix
 		
 		// Now ready for second pass to fill the matrix with bi-gram counts
