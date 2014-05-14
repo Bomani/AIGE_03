@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Word : MonoBehaviour {
+public class Word {
 
 	private string wordSt;		// The word as a string
 	private int count = 1;		// The count of this word in corpus

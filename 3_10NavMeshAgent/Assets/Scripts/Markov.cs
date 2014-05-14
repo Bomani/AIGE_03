@@ -21,8 +21,7 @@ public class Markov : MonoBehaviour {
 	}
 
 	public void init () {
-		biGrams = GetComponent<Graph>();	// Declare the Graph but don't initialize it yet
-		biGrams.init();
+		biGrams = new Graph();	// Declare the Graph but don't initialize it yet
 	}
 
 	/* CreateGraph method

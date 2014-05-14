@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 
-public class Graph : MonoBehaviour {
+public class Graph {
 
 	// attributes
 	private int[,] matrix; 			// Adjacency matrix
-	private Hashtable vertices; 	// Vertex array is hash table
+	private Dictionary<string, Word> vertices; 	// Vertex array is hash table
 	private int numVertices = 0;    // Max number of vertices in matrix
 	private string[] wordString;
 	private System.Random rand = new System.Random();
@@ -15,7 +16,7 @@ public class Graph : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		numVertices = 0;
-		vertices = new Hashtable();
+		vertices = new Dictionary<string, Word>();
 	}
 	
 	// Update is called once per frame
@@ -23,9 +24,9 @@ public class Graph : MonoBehaviour {
 	
 	}
 
-	public void init() {
+	public Graph() {
 		numVertices = 0;
-		vertices = new Hashtable();
+		vertices = new Dictionary<string, Word>();
 	}
 
 	public int NumVertices
@@ -47,7 +48,7 @@ public class Graph : MonoBehaviour {
 	// Add a vertex to the list of vertices
 	public void LoadVertex(string word)
 	{
-		if (vertices.Contains(word))		// Word already in vertices
+		if (vertices.ContainsKey(word))		// Word already in vertices
 		{
 			Word w = (Word) vertices[word];
 			w.Count++;						// Increment word count
@@ -55,7 +56,7 @@ public class Graph : MonoBehaviour {
 		else
 		{									// New word, add to vertices
 			numVertices++;					// and count it as a new word
-			Word w = GetComponent<Word>().init(word, numVertices - 1);
+			Word w = new Word(word, numVertices - 1);
 			vertices.Add(word, w);
 		}
 	}
@@ -71,7 +72,7 @@ public class Graph : MonoBehaviour {
 	
 	public Word GetVertex(string word)	// Safe getter
 	{
-		if (vertices.Contains(word))
+		if (vertices.ContainsKey(word))
 		{
 			return (Word) vertices[word];
 		}
@@ -112,6 +113,8 @@ public class Graph : MonoBehaviour {
 		//Debug.Log (prevWord);
 		Word prev = (Word) vertices[prevWord];
 
+		//prev.init(prevWord, (int)vertices[prevWord]);
+
 		int nextOffset = findNextWord(prev.Offset, prev.Count);
 		return wordString[nextOffset];
 	}
@@ -131,7 +134,8 @@ public class Graph : MonoBehaviour {
 		}
 		return 0;								// Shouldn't happen
 	}
-	
+
+	/*
 	// Dump out upper left corner of the transition matrix for debugging purposes
 	public void DumpMatrix()
 	{
@@ -145,7 +149,8 @@ public class Graph : MonoBehaviour {
 			Console.WriteLine("");
 		}
 	}
-	
+	*/
+	/*
 	// Override ToString for debugging purposes
 	public override string ToString()
 	{
@@ -176,4 +181,5 @@ public class Graph : MonoBehaviour {
 		}
 		return text;
 	}
+	*/
 }
