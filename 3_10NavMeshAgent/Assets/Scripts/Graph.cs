@@ -121,8 +121,6 @@ public class Graph {
 	
 	int findNextWord(int prevOff, int prevCount)
 	{
-		Debug.Log (prevCount);
-
 		int randCt = rand.Next(1, prevCount);
 	
 		int tot = 0;

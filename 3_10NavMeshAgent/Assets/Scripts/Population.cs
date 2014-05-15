@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.IO;
 
-public class Population : MonoBehaviour {
+public class Population {
 
 	/* Population class implements a single population. Used by ThreshPop for both
 	 * oldP and newP. 

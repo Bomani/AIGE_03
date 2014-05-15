@@ -16,7 +16,10 @@ public class GameManager : MonoBehaviour
 	// Also for steering behaviors
 	public float avoidDist;
 	public float separationDist;
-	
+
+	//Genetic Algorithm Variables
+	ThreshPop tp;
+	byte [] chroms;
 
 	// "Constants"
 	public int numberOfvillagers;
@@ -80,6 +83,8 @@ public class GameManager : MonoBehaviour
 	//list of werewolf followers
 	public List<GameObject> WerewolfFollowers = new List<GameObject>();
 	public List<GameObject> wFollowers {get{return WerewolfFollowers;}}
+
+	public int[] lifeTime;
 	
 
 	// array of obstacles with accessor
@@ -109,25 +114,33 @@ public class GameManager : MonoBehaviour
 		obstacles = GameObject.FindGameObjectsWithTag ("Obstacle");
 		
 		mayor = GameObject.FindGameObjectWithTag ("Mayor");
-		
+
+		tp = new ThreshPop(numberOfvillagers, "Assets/Resources/GA_Population");
+		chroms = new byte[numberOfvillagers];
+		lifeTime = new int[numberOfvillagers];
+
 		for (int i = 0; i < numberOfvillagers; i++) {
 			//Instantiate a flocker prefab, catch the reference, cast it to a GameObject
 			//and add it to our list all in one line.
 			villagers.Add ((GameObject)Instantiate (villagerPrefab, 
-				new Vector3 (600 + 5 * i, 5, 400), Quaternion.identity));
+				new Vector3 (Random.Range(300 + 5 * i,600 + 5 * i), 5, Random.Range(100,600)), Quaternion.identity));
 			//grab a component reference
 			villager = villagers [i].GetComponent<Villager> ();
 			// HOW ABOUT NO //villagers[i].GetComponent<MeshRenderer>().material.SetColor("_Color", Color.green);
 			//set values in the Vehicle script
 			villager.Index = i;
-			
+
+			chroms[i] = tp.CheckOut();
+
+			villager.MayorFollowDistance = (int)Gen2Phen(chroms[i]);
+
 			VillageFollowers.Add((GameObject)Instantiate(followerPrefab, 
 				new Vector3(600 + 5 * i, 150,400), Quaternion.identity));
 			
 			//Create a follower for the minimap
 			follower = VillageFollowers[i].GetComponent<Follow> ();
 			follower.ToFollow = villagers[i];
-			//VillageFollowers[i].GetComponent<MeshRenderer>().material.SetColor("_Color", Color.green);
+			VillageFollowers[i].GetComponent<MeshRenderer>().material.SetColor("_Color", Color.green);
 			villager.Follower = follower;
 			
 		}
@@ -186,9 +199,21 @@ public class GameManager : MonoBehaviour
 	{
 		if(currentNumberOfVillagers == 0) {
 
+			int i = 0;
+
+			while(!tp.AllCheckedIn()) {
+				int fit = Fitness(Gen2Phen(chroms[i]), i);
+				tp.CheckIn(chroms[i],fit);
+				i++;
+			}
+
+			tp.WritePop();
+
+
+
 			while(currentNumberOfVillagers != 6) {
 
-				createNewVillager();
+				createNewVillager(currentNumberOfVillagers);
 
 				currentNumberOfVillagers++;
 			}
@@ -211,7 +236,7 @@ public class GameManager : MonoBehaviour
 		
 	}
 	
-	public void createNewVillager()
+	public void createNewVillager(int index)
 	{
 		Villager villager;
 		Follow follower;
@@ -223,7 +248,13 @@ public class GameManager : MonoBehaviour
 			villagers[villagers.Count-1].GetComponent<MeshRenderer>().material.SetColor("_Color", Color.green);
 			//set values in the Vehicle script
 			villager.Index = villagers.Count-1;
-		
+			
+			Debug.Log (villager.Index);
+
+			chroms[villager.Index] = tp.CheckOut();
+			
+			villager.MayorFollowDistance = (int)Gen2Phen(chroms[villager.Index]);
+
 			VillageFollowers.Add((GameObject)Instantiate(followerPrefab, 
 				new Vector3(371 + UnityEngine.Random.Range(0,10), 5, 365), Quaternion.identity));
 			
@@ -271,6 +302,19 @@ public class GameManager : MonoBehaviour
 		
 		centroidContainer.transform.position = new Vector3(100,100,100);
 	}
-	
 
+	static float Gen2Phen (byte gen)
+	{
+		float lb = 10.0f;	// Lower bound for threshold range in game
+		float ub = 50.0f;	// Upper bound
+		float step = (ub - lb) / 256;	// Step size for chrom values
+		return (gen * step + lb);
+	}
+
+	int Fitness(float phen, int i) {
+		
+		return (int) (phen * 2 + lifeTime[i]); 
+	}
+	
+	
 }

@@ -8,7 +8,7 @@ using System.Collections;
 	 * is not used by the Main method.
 	 */
 
-public class Individual : MonoBehaviour {
+public class Individual {
 
 
 

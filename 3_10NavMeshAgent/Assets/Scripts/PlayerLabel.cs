@@ -121,9 +121,13 @@ public class PlayerLabel : MonoBehaviour {
 
 		string returned = "";
 
-		string firstChar = sentWords[0].Substring(0, 1).ToUpper();	// Cap first word
-		string capitalized = firstChar + sentWords[0].Substring(1, sentWords[0].Length-1);
-		sentWords[0] = capitalized;
+		Debug.Log (sentWords.Length);
+
+		if(sentWords[0] != null) {
+			string firstChar = sentWords[0].Substring(0, 1).ToUpper();	// Cap first word
+			string capitalized = firstChar + sentWords[0].Substring(1, sentWords[0].Length-1);
+			sentWords[0] = capitalized;
+		}
 
 		returned = returned + sentWords[0];
 

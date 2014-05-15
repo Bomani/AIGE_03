@@ -13,7 +13,7 @@ using System.IO;
 	 * Individuals. 
 	 */
 
-public class ThreshPop : MonoBehaviour {
+public class ThreshPop {
 
 	int popSize;		// Number of Individuals in population
 	Population oldP;	// Old population read from file or generated randomly
@@ -28,8 +28,7 @@ public class ThreshPop : MonoBehaviour {
 	
 	}
 
-	void Initialize (int size, string path) {
-
+	public ThreshPop(int size, string path) {
 		popSize = size;
 		popPath = path;
 		oldP = new Population (); // Old population for check out
@@ -38,7 +37,6 @@ public class ThreshPop : MonoBehaviour {
 		newP = new Population ();	// New population for check in
 		newP.initialize(popSize);
 	}
-
 
 	// Update is called once per frame
 	void Update () {

@@ -52,7 +52,10 @@ public class Werewolf : MonoBehaviour {
 		{
 			// Kill and destroy collided villager, and respawn
 			GameObject deadVillager = wCollision.gameObject;
-			Villager death = wCollision.gameObject.GetComponent<Villager>(); 
+			Villager death = wCollision.gameObject.GetComponent<Villager>();
+
+			gameManager.lifeTime[death.Index] = death.Lifetime;
+
 			gameManager.Villagers.Remove(deadVillager);
 			gameManager.vFollowers.Remove(death.Follower.gameObject);
 			gameManager.Followers.Remove(death);

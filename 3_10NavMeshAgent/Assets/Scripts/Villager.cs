@@ -83,6 +83,23 @@ public class Villager : MonoBehaviour
 	//steering variable
 	private Vector3 steeringForce;
 	private bool leaderFollowBool;
+	private int werewolfFleeDist;
+	private int mayorFollowDist;
+	private int life;
+
+	public int MayorFollowDistance {
+		get {return mayorFollowDist;}
+		set {mayorFollowDist = value;}
+	}
+
+	public int WerewolfFleeDistance {
+		get {return werewolfFleeDist;}
+		set { werewolfFleeDist = value;}
+	}
+
+	public int Lifetime {
+		get {return life;}
+	}
 
 	//list of nearby flockers
 	private List<GameObject> nearVillagers = new List<GameObject> ();
@@ -101,6 +118,9 @@ public class Villager : MonoBehaviour
 		LoadFSM();
 		currSt = 0;
 
+		mayorFollowDist = 20;
+		werewolfFleeDist = 30;
+
 		leaderFollowBool = false; // following mayor
 		nearWere = false; // if near werewolf for decision tree
 		wereInCity = false; //if were wolves have infiltrated the city
@@ -118,6 +138,9 @@ public class Villager : MonoBehaviour
 	{
 		if(wCollision.gameObject.tag == "Cart")
 		{
+
+			gameManager.lifeTime[index] = life + 200;
+
 			GameObject savedVillager = this.gameObject;
 			Villager safe = this; 
 			gameManager.Villagers.Remove(savedVillager);
@@ -129,7 +152,9 @@ public class Villager : MonoBehaviour
 			Destroy(this);
 			gameManager.currVillagers -= 1;
 			gameManager.Saved.SavedVillagers = gameManager.Saved.SavedVillagers + 1;
-			
+
+
+
 			Destroy(savedVillager);	
 			
 			
@@ -189,7 +214,9 @@ public class Villager : MonoBehaviour
 	{
 		CalcSteeringForce ();
 		ClampSteering ();
-		
+
+		life++;
+
 		moveDirection = transform.forward * steering.Speed;
 		// movedirection equals velocity
 		//add acceleration
@@ -227,7 +254,7 @@ public class Villager : MonoBehaviour
 
 					for(int i = 0; i < gameManager.Werewolves.Count; i++) {
 						
-						if(Vector3.Distance(this.transform.position, gameManager.Werewolves[i].transform.position) < 20) {
+						if(Vector3.Distance(this.transform.position, gameManager.Werewolves[i].transform.position) < werewolfFleeDist) {
 							currSt = MakeTrans(currSt, 0);
 							nearWere = true;
 						}
@@ -257,7 +284,7 @@ public class Villager : MonoBehaviour
 						for(int i = 0; i < gameManager.Werewolves.Count; i++) {
 							
 							if(Vector3.Distance(this.transform.position, gameManager.Werewolves[i].transform.position) < 5) {
-								currSt = MakeTrans(currSt, 0);
+								currSt = MakeTrans(currSt, 3);
 								nearWere = true;
 							}
 							
@@ -265,9 +292,9 @@ public class Villager : MonoBehaviour
 						
 						if(nearWere == false) {
 							
-							if(Vector3.Distance(this.transform.position, gameManager.Mayor.transform.position) > 30 && leaderFollowBool == true) {
+							if(Vector3.Distance(this.transform.position, gameManager.Mayor.transform.position) > mayorFollowDist && leaderFollowBool == true) {
 								
-								currSt = MakeTrans(currSt,4);
+								currSt = MakeTrans(currSt, 4);
 								leaderFollowBool = false;
 								gameManager.Followers.Remove(this);
 								
@@ -279,9 +306,15 @@ public class Villager : MonoBehaviour
 									steeringForce += gameManager.cohesionWt * Cohesion();
 									leaderFollowBool = true;
 								}else {
-									steeringForce += 45 * leaderFollow();
-									steeringForce += gameManager.separationWt * Separation();
-									steeringForce += gameManager.cohesionWt * Cohesion();
+
+									if(Vector3.Distance(this.transform.position, gameManager.Mayor.transform.position) > 8) {
+										steeringForce += 10 * leaderFollow();
+										steeringForce += gameManager.separationWt * Separation();
+										steeringForce += gameManager.cohesionWt * Cohesion();
+									}
+									else {
+										steeringForce += gameManager.cohesionWt * Cohesion();
+									}
 								}
 					
 							}
@@ -296,7 +329,7 @@ public class Villager : MonoBehaviour
 						currSt = MakeTrans(currSt, 2);
 					}else {
 
-					if(Vector3.Distance(this.transform.position, gameManager.Mayor.transform.position) < 20 && leaderFollowBool == false) {
+					if(Vector3.Distance(this.transform.position, gameManager.Mayor.transform.position) < mayorFollowDist && leaderFollowBool == false) {
 						currSt = MakeTrans(currSt, 1);
 					}else {
 						
@@ -304,7 +337,7 @@ public class Villager : MonoBehaviour
 						{
 							float wDist =  Vector3.Distance(this.transform.position, gameManager.Werewolves[i].transform.position);		
 							
-							if(wDist < 20) {
+							if(wDist < werewolfFleeDist) {
 								steeringForce += steering.Flee(gameManager.Werewolves[i].transform.position);
 								nearWere = true;
 							}

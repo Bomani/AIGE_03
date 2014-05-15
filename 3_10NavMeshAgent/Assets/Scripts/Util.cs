@@ -8,7 +8,7 @@ using System.Collections;
 	 * Also put the Random object here because only need one.
 	 */
 
-public class Util : MonoBehaviour {
+public class Util {
 
 	// Use this for initialization
 	void Start () {
