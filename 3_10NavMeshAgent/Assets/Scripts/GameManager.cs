@@ -248,8 +248,6 @@ public class GameManager : MonoBehaviour
 			villagers[villagers.Count-1].GetComponent<MeshRenderer>().material.SetColor("_Color", Color.green);
 			//set values in the Vehicle script
 			villager.Index = villagers.Count-1;
-			
-			Debug.Log (villager.Index);
 
 			chroms[villager.Index] = tp.CheckOut();
 			

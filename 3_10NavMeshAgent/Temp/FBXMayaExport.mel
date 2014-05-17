@@ -1,13 +1,13 @@
 while (1)
 {	
-	if (`filetest -r "D:/Users/abw5248/GitHub/AIGE_03/3_10NavMeshAgent/Temp/CommandPipe"`)
+	if (`filetest -r "C:/Users/Owner/DOCUME~1/GitHub/AIGE_03/3_10NA~1/Temp/CommandPipe"`)
 	{
 		$exportNormals = 0;
 		$exportTangents = 0;
 		$bakeCommand = "";
 	
 		// Parse settings
-		$waitpipe = `fopen "D:/Users/abw5248/GitHub/AIGE_03/3_10NavMeshAgent/Temp/CommandPipe" "r"`;
+		$waitpipe = `fopen "C:/Users/Owner/DOCUME~1/GitHub/AIGE_03/3_10NA~1/Temp/CommandPipe" "r"`;
 		$filename = `fgetline $waitpipe`;
 		
 		for ($i = 0; $i < 3; ++$i) 
@@ -136,16 +136,16 @@ while (1)
 				FBXExportShowUI -v false;
 
 				print "Before fbx export\n";
-				FBXExport -f "D:/Users/abw5248/GitHub/AIGE_03/3_10NavMeshAgent/Temp/ExportedFBXFile.fbx";
+				FBXExport -f "C:/Users/Owner/DOCUME~1/GitHub/AIGE_03/3_10NA~1/Temp/ExportedFBXFile.fbx";
 				print "after fbx export\n";
 			}
 			else
 				print "Could not open Maya file.";
 
 			// TODO: We should use sysFile, so we don't have to have two separate mel scripts for OSX/Windows
-			system ("del \"D:\\Users\\abw5248\\GitHub\\AIGE_03\\3_10NavMeshAgent\\Temp\\CommandPipe\"");
+			system ("del \"C:\\Users\\Owner\\DOCUME~1\\GitHub\\AIGE_03\\3_10NA~1\\Temp\\CommandPipe\"");
 
-			$donepipe = `fopen "D:/Users/abw5248/GitHub/AIGE_03/3_10NavMeshAgent/Temp/SyncPipe" "w"`;
+			$donepipe = `fopen "C:/Users/Owner/DOCUME~1/GitHub/AIGE_03/3_10NA~1/Temp/SyncPipe" "w"`;
 			fwrite $donepipe "Done";
 			fclose $donepipe;
 			print "Finished maya loading and fbx conversion \n";

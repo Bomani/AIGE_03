@@ -15,7 +15,7 @@ public class PlayerLabel : MonoBehaviour {
 	private Transform triggerTransform;
 	private Markov markov;
 	private System.Random rand;
-	
+	private bool talking = false;
 	
 	//These are used in determining whether the label should be drawn
 	//and where on the screen.
@@ -25,7 +25,7 @@ public class PlayerLabel : MonoBehaviour {
 	private Vector3 cameraRelativePosition = new Vector3();
 	private float minimumZ = 1.5f;
 	
-	
+	private Villager villager;
 	
 	//Used in displaying the player's name.
 	public string objectName = "No Name";
@@ -41,7 +41,7 @@ public class PlayerLabel : MonoBehaviour {
 	private int labelTop = 20;
 	private int labelWidth = 40;
 	private int labelHeight = 15;
-	private int adjustment = 1;
+	private int adjustment = 3;
 	
 	//Variables End_____________________________________
 	
@@ -49,14 +49,16 @@ public class PlayerLabel : MonoBehaviour {
 	void Awake ()
 	{
 		playerName = objectName;
+		playerName = " ";
 		myTransform = transform;
 		myCamera = Camera.main;
 		rand = new System.Random();
+		villager = GetComponent<Villager>();
 
 		if(networkView.isMine)
 		{		
 			myStyle.normal.textColor = Color.black;	
-			myStyle.fontSize = 12;
+			myStyle.fontSize = 14;
 			myStyle.fontStyle = FontStyle.Normal;
 			//Allow the text to extend beyond the width of the label	
 			myStyle.clipping = TextClipping.Overflow;
@@ -113,15 +115,29 @@ public class PlayerLabel : MonoBehaviour {
 
 	public void newSentence() {
 
-		playerName = sentStringArr(markov.GenGibSent(rand.Next(60)));
-		Invoke("newSentence", 5 + (playerName.Length/20));
+		if(talking == false) {
+			playerName = sentStringArr(markov.GenGibSent(rand.Next(60)));
+			Invoke("spacer", 5 + (playerName.Length/20));
+			talking = true;
+		}
+
 	}
 
+	public void resetSentence() {
+
+		talking = false;
+
+	}
+
+	private void spacer() {
+
+		playerName = " ";
+		Invoke("resetSentence", 3);
+
+	}
 	string sentStringArr (string[] sentWords) {
 
 		string returned = "";
-
-		Debug.Log (sentWords.Length);
 
 		if(sentWords[0] != null) {
 			string firstChar = sentWords[0].Substring(0, 1).ToUpper();	// Cap first word

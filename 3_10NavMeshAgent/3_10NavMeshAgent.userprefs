@@ -1,15 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerLabel.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\Population.cs" Line="167" Column="1" />
-      <File FileName="Assets\Scripts\ThreshPop.cs" Line="33" Column="17" />
-      <File FileName="Assets\Scripts\Individual.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Util.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GameManager.cs" Line="241" Column="21" />
-      <File FileName="Assets\Scripts\Villager.cs" Line="218" Column="10" />
-      <File FileName="Assets\Scripts\PlayerLabel.cs" Line="121" Column="3" />
-      <File FileName="Assets\Scripts\Werewolf.cs" Line="46" Column="45" />
+      <File FileName="Assets\Scripts\GameManager.cs" Line="250" Column="39" />
+      <File FileName="Assets\Scripts\PlayerLabel.cs" Line="140" Column="24" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

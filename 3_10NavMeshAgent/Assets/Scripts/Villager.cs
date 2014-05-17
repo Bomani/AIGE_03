@@ -130,7 +130,7 @@ public class Villager : MonoBehaviour
 		Markov markov = GetComponent<Markov>();
 		markov.init();
 		markov.CreateGraph();
-		GetComponent<PlayerLabel>().newSentence();
+
 	}
 	
 	//Handles Collision with Cart for Scoring and Clean Up Purposes
@@ -236,6 +236,10 @@ public class Villager : MonoBehaviour
 		// the CharacterController moves us subject to physical constraints
 
 		characterController.Move (moveDirection * Time.deltaTime);
+
+		if(Vector3.Distance(this.transform.position, gameManager.Mayor.transform.position) < 15) {
+			GetComponent<PlayerLabel>().newSentence();
+		}
 	}
 
 	//Uses the various Movement Behaviors to calculate the vector to
