@@ -3,12 +3,12 @@ using System.Collections;
 
 public class NavAgent : MonoBehaviour {
 
-	NavMeshAgent agent;
+	//NavMeshAgent agent;
 
 	// Use this for initialization
 	void Start () {
 
-		agent = GetComponent<NavMeshAgent>();
+		//agent = GetComponent<NavMeshAgent>();
 	
 	}
 	

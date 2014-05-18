@@ -16,6 +16,7 @@ public class PlayerLabel : MonoBehaviour {
 	private Markov markov;
 	private System.Random rand;
 	private bool talking = false;
+	private GameObject gameManager;
 	
 	//These are used in determining whether the label should be drawn
 	//and where on the screen.
@@ -25,7 +26,7 @@ public class PlayerLabel : MonoBehaviour {
 	private Vector3 cameraRelativePosition = new Vector3();
 	private float minimumZ = 1.5f;
 	
-	private Villager villager;
+	//private Villager villager;
 	
 	//Used in displaying the player's name.
 	public string objectName = "No Name";
@@ -53,7 +54,7 @@ public class PlayerLabel : MonoBehaviour {
 		myTransform = transform;
 		myCamera = Camera.main;
 		rand = new System.Random();
-		villager = GetComponent<Villager>();
+		//villager = GetComponent<Villager>();
 
 		if(networkView.isMine)
 		{		
@@ -73,6 +74,7 @@ public class PlayerLabel : MonoBehaviour {
 		}
 
 		markov = GetComponent<Markov>();
+		gameManager = GameObject.FindGameObjectWithTag("GameManager");
 	}
 	
 	
@@ -116,8 +118,9 @@ public class PlayerLabel : MonoBehaviour {
 	public void newSentence() {
 
 		if(talking == false) {
-			playerName = sentStringArr(markov.GenGibSent(rand.Next(60)));
-			Invoke("spacer", 5 + (playerName.Length/20));
+			playerName = sentStringArr(markov.GenGibSent(rand.Next(60) + 3));
+			gameManager.GetComponent<VoiceSpeaker>().speak(playerName);
+			Invoke("spacer", 1 + (playerName.Length/20));
 			talking = true;
 		}
 

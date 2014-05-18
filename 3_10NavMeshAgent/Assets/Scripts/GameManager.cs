@@ -123,7 +123,7 @@ public class GameManager : MonoBehaviour
 			//Instantiate a flocker prefab, catch the reference, cast it to a GameObject
 			//and add it to our list all in one line.
 			villagers.Add ((GameObject)Instantiate (villagerPrefab, 
-				new Vector3 (Random.Range(300 + 5 * i,600 + 5 * i), 5, Random.Range(100,600)), Quaternion.identity));
+				new Vector3 (Random.Range(300 + 5 * i,600 + 5 * i), 5, Random.Range(250,800)), Quaternion.identity));
 			//grab a component reference
 			villager = villagers [i].GetComponent<Villager> ();
 			// HOW ABOUT NO //villagers[i].GetComponent<MeshRenderer>().material.SetColor("_Color", Color.green);

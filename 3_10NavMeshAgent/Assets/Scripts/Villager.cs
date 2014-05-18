@@ -153,8 +153,6 @@ public class Villager : MonoBehaviour
 			gameManager.currVillagers -= 1;
 			gameManager.Saved.SavedVillagers = gameManager.Saved.SavedVillagers + 1;
 
-
-
 			Destroy(savedVillager);	
 			
 			

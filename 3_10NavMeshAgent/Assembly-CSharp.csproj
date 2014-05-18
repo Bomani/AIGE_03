@@ -68,6 +68,7 @@
      <Compile Include="Assets\Scripts\Util.cs" />
      <Compile Include="Assets\Scripts\Vehicle.cs" />
      <Compile Include="Assets\Scripts\Villager.cs" />
+     <Compile Include="Assets\Scripts\VoiceSpeaker.cs" />
      <Compile Include="Assets\Scripts\Werewolf.cs" />
      <Compile Include="Assets\Scripts\Win.cs" />
      <Compile Include="Assets\Scripts\Word.cs" />

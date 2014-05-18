@@ -131,18 +131,20 @@ public class Werewolf : MonoBehaviour {
 		
 		float tarDist = Vector3.Distance(this.transform.position, target.transform.position);
 		
-			if(tarDist > 30 && mayDist > 10)
+			if(mayDist < 20)
+			{
+				steeringForce += 10 * steering.Flee(gameManager.Mayor);	
+				
+			}
+			else if(tarDist > 30 && mayDist > 10)
 			{
 				steeringForce += 10 * steering.Seek(target.transform.forward +
-					target.transform.position);
+			                                    target.transform.position);
+				
 			}
 			else if(tarDist < 10 && mayDist > 5)
 			{
 				steeringForce += 10 * steering.Seek(target.transform.position);	
-			}
-			else if(mayDist < 10)
-			{
-				steeringForce += 10 * steering.Flee(gameManager.Mayor);	
 			}
 			else
 			{

@@ -1,9 +1,17 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameManager.cs">
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Markov.cs">
     <Files>
-      <File FileName="Assets\Scripts\GameManager.cs" Line="250" Column="39" />
-      <File FileName="Assets\Scripts\PlayerLabel.cs" Line="140" Column="24" />
+      <File FileName="Assets\Scripts\Werewolf.cs" Line="135" Column="5" />
+      <File FileName="Assets\Scripts\PlayerLabel.cs" Line="128" Column="1" />
+      <File FileName="Assets\Scripts\VoiceSpeaker.cs" Line="99" Column="6" />
+      <File FileName="Assets\Scripts\Villager.cs" Line="34" Column="1" />
+      <File FileName="Assets\Scripts\GameManager.cs" Line="127" Column="32" />
+      <File FileName="Assets\Scripts\Follow.cs" Line="22" Column="73" />
+      <File FileName="Assets\Resources\VanHelsingLines.txt" Line="3" Column="20" />
+      <File FileName="Assets\Scripts\ThreshPop.cs" Line="51" Column="4" />
+      <File FileName="Assets\Scripts\NavAgent.cs" Line="6" Column="4" />
+      <File FileName="Assets\Scripts\Markov.cs" Line="31" Column="57" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
