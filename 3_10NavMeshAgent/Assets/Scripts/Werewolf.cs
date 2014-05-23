@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Steering))]
@@ -30,7 +30,11 @@ public class Werewolf : MonoBehaviour {
 	//Hunting variables
 	private GameObject target;
 	private int preyIndex;
-	
+	private bool pathFollow;
+	private int pathIndex;
+	public GameObject[] Path;
+
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -39,15 +43,19 @@ public class Werewolf : MonoBehaviour {
 		steering = gameObject.GetComponent<Steering> ();
 		
 		respawnPont = GameObject.FindGameObjectWithTag("Respawn");
-		
+
 		gameManager = GameManager.Instance;
-		
+
+		pathFollow = true;
+		pathIndex = 0;
+
 		preyIndex = 0;
 		target = gameManager.Villagers[preyIndex];
 	}
 	
 	public void OnCollisionEnter(Collision wCollision)
 	{
+
 		if(wCollision.gameObject.tag == "Villager")
 		{
 			// Kill and destroy collided villager, and respawn
@@ -130,7 +138,27 @@ public class Werewolf : MonoBehaviour {
 		findTarget();
 		
 		float tarDist = Vector3.Distance(this.transform.position, target.transform.position);
-		
+
+		if(pathFollow) {
+
+			steeringForce += steering.Seek(Path[pathIndex].gameObject.transform.position);
+			Debug.Log (pathIndex);
+
+			if(Vector3.Distance(this.transform.position, Path[pathIndex].gameObject.transform.position) < 10) {
+				pathIndex++;
+
+				if(pathIndex >= Path.Length) {
+					pathIndex = 0;
+				}
+			}
+
+			if(tarDist < 40) {
+
+				pathFollow = false;
+
+			}
+
+		}else {
 			if(mayDist < 20)
 			{
 				steeringForce += 10 * steering.Flee(gameManager.Mayor);	
@@ -150,6 +178,12 @@ public class Werewolf : MonoBehaviour {
 			{
 				steeringForce += 2 * steering.Seek(target.transform.position);
 			}
+
+			if(tarDist > 40) {
+				pathFollow = true;
+			}
+		
+		}
 		
 		//avoid close obstacles
 		for(int i =0; i < gameManager.Obstacles.Length; i++)
